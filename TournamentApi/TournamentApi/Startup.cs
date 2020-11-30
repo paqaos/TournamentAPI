@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using TournamentApi.DataLayer;
 
 namespace TournamentApi
 {
@@ -49,6 +51,10 @@ namespace TournamentApi
                 options.AddPolicy("AllowSpecificOrigin",
                     builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
+
+            var config = Configuration.GetConnectionString("TournamentContext");
+            services.AddDbContext<TournamentDataContext>(options =>
+                options.UseSqlServer(config, b => b.MigrationsAssembly("TournamentApi")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
